@@ -5,6 +5,10 @@ __pycache__/
 
 # Data
 collection.tsv
+2019qrels-pass.txt
+collections/
+runs/
+indexes/
 
 # C extensions
 *.so
@@ -130,3 +134,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE
+.idea/
