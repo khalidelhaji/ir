@@ -33,7 +33,7 @@ def run_all_queries(output_file_name, topics, searcher):
 def main():
     # This assumes the index has already been generated
     searcher = SimpleSearcher('indexes/msmarco-passage')
-    searcher.set_bm25(0.82, 0.68)
+    # searcher.set_bm25(0.82, 0.68)
 
     topics = read_topics('msmarco-test2019-queries.tsv')
 
