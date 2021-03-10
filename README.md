@@ -1,12 +1,12 @@
 # Information Retrieval
 
-## Requirements:
+### Requirements
 - Python 3
 - Java 11
 - PIP
 - RankLib (make sure the .jar is in this directory)
 
-## Steps to reproduce
+### Steps to reproduce
 Clone with `--recurse-submodules` to get the required tools folder which is used for evaluation and file conversion.
 
 ### Install dependencies
