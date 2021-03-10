@@ -16,4 +16,4 @@ echo "Re-rank test set"
 java -jar RankLib.jar -load models/model.txt -rank ranklib-features/data_ranklib-test.txt -indri runs/ranklib-score.trec
 
 echo "Evaluating"
-tools/eval/trec_eval.9.0.4/trec_eval -c -mmap -mrecip_rank 2019qrels-pass.txt runs/ranklib-score.trec
+tools/eval/trec_eval.9.0.4/trec_eval -c -mmap -mrecip_rank -mndcg 2019qrels-pass.txt runs/ranklib-score.trec

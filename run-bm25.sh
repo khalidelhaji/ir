@@ -31,4 +31,4 @@ fi
 
 # Evaluate results from test run with TREC tool
 echo "Evaluating"
-tools/eval/trec_eval.9.0.4/trec_eval -c -mmap -mrecip_rank 2019qrels-pass.txt runs/run.msmarco-test2019-queries-bm25.trec
+tools/eval/trec_eval.9.0.4/trec_eval -c -mmap -mrecip_rank -mndcg 2019qrels-pass.txt runs/run.msmarco-test2019-queries-bm25.trec

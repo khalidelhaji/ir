@@ -95,4 +95,4 @@ def main(queries_file, qrels_file, output_file, separator, write_negative):
 if __name__ == '__main__':
 	# Uncommented by default to avoid running a long command (~20 minutes or so)
 	# main('queries.train.tsv', 'qrels.train.tsv', 'ranklib-features/data_ranklib-train.txt', '\t', True)
-	main('msmarco-test2019-queries.tsv', '2019qrels-pass.txt', 'ranklib-features/data_ranklib-test.txt', ' ', False)
+	main('msmarco-test2019-queries.tsv', 'runs/run.msmarco-test2019-queries-bm25.trec', 'ranklib-features/data_ranklib-test.txt', ' ', False)
