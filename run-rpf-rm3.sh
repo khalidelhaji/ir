@@ -4,8 +4,8 @@
 mkdir -p runs
 
 # Perform test queries on indexed data set
-echo "Ranking test queries BM25"
-python run-bm25.py
+echo "Ranking test queries Improvement: RM3"
+python run-rpf-rm3.py
 
 # Convert test set output from TREC format to the format required by MS-MARCO official evaluation script
 echo "Converting run"

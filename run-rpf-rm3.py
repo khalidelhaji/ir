@@ -34,6 +34,7 @@ def main():
     # This assumes the index has already been generated
     searcher = SimpleSearcher('indexes/msmarco-passage')
     # searcher.set_bm25(0.82, 0.68)
+    searcher.set_rm3(fb_terms=25, fb_docs=50, original_query_weight=0.5)
 
     topics = read_topics('msmarco-test2019-queries.tsv')
 
