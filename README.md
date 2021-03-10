@@ -1,7 +1,7 @@
 # Information Retrieval
 
 ### Requirements
-- Python 3
+- Python 3.6+
 - Java 11
 - PIP
 - RankLib (make sure the .jar is in this directory)
