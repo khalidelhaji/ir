@@ -1,4 +1,4 @@
-# Information Retrieval
+# Information Retrieval Core Project
 
 ### Requirements
 - Python 3.6+
