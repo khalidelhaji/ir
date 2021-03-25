@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+wiki-news-300d-1M-subword.bin
+wiki-news-300d-1M.vec
+
+
 # Data
 collection.tsv
 2019qrels-pass.txt

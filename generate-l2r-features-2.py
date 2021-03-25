@@ -1,6 +1,15 @@
 import math
 import random
+import json
 from pyserini.index import IndexReader
+import io
+from nltk.tokenize import word_tokenize
+import string
+from nltk.corpus import stopwords
+import gensim
+from gensim.models import FastText
+from gensim.test.utils import datapath
+
 
 TOTAL_DOCS = 8841823
 LAMBDA = 0.5 # LMIR.JM hyperparameter
@@ -69,27 +78,79 @@ def get_negative_docid(document_count, docid):
 		negative_docid = random.randint(1, document_count)
 	return negative_docid
 
+def load_vectors(fname):
+    fin = io.open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
+    n, d = map(int, fin.readline().split())
+    data = {}
+    for line in fin:
+        tokens = line.rstrip().split(' ')
+        data[tokens[0]] = map(float, tokens[1:])
+        #print(data[tokens[0]])
+    return data
+
+
+def clean(text):
+	tokens = word_tokenize(text)
+	# convert to lower case
+	tokens = [w.lower() for w in tokens]
+	# remove punctuation from each wor
+	table = str.maketrans('', '', string.punctuation)
+	stripped = [w.translate(table) for w in tokens]
+	# remove remaining tokens that are not alphabetic
+	words = [word for word in stripped if word.isalpha()]
+	# filter out stop words
+	#stop_words = set(stopwords.words('english'))
+	#words = [w for w in words if not w in stop_words]
+	
+	return words
+
 def main(queries_file, qrels_file, output_file, separator, write_negative):
 	queries = read_topics(queries_file)
 	index_reader = IndexReader('indexes/msmarco-passage')
 	document_count = int(index_reader.stats()['documents'])
 	qrels = open(qrels_file, 'r')
 
-	with open(output_file, 'w') as output_file_handle:
-		for line in qrels:
-			line = line.strip().split(separator)
+	#vectors = load_vectors("wiki-news-300d-1M.vec")
 
-			qid = int(line[0])
-			docid = line[2]
-			target = line[3]
-			query = queries[qid]['title']
+	#load_vectors("wiki-news-300d-1M.vec")
 
-			output_file_handle.write(compute_features(index_reader, query, qid, docid, target))
+	#model = FastText.load_fasttext_format('wiki-news-300d-1M.bin')
+	cap_path = datapath("/home/khalid/new2/ir/wiki-news-300d-1M-subword.bin")
+	model = gensim.models.fasttext.load_facebook_vectors(cap_path)
 
-			# The evaluation set doesn't need negative examples.
-			if write_negative:
-				negative_docid = str(get_negative_docid(document_count, docid))
-				output_file_handle.write(compute_features(index_reader, query, qid, negative_docid, 0))
+	print("Done.")
+
+	#with open(output_file, 'w') as output_file_handle:
+	for line in qrels:
+		line = line.strip().split(separator)
+
+		qid = int(line[0])
+		docid = line[2]
+		target = line[3]
+		query = queries[qid]['title']
+		doc = json.loads(index_reader.doc_raw(docid))["contents"]
+
+		# print(query)
+		# print(doc)
+
+		query_words = clean(query)
+		doc_words = clean(doc)
+
+		print(doc_words)
+
+		for word in doc_words:
+
+			print(model[word])
+
+		return
+		#print(doc_words)
+
+	# 		output_file_handle.write(compute_features(index_reader, query, qid, docid, target))
+
+	# 		# The evaluation set doesn't need negative examples.
+	# 		if write_negative:
+	# 			negative_docid = str(get_negative_docid(document_count, docid))
+	# 			output_file_handle.write(compute_features(index_reader, query, qid, negative_docid, 0))
 
 
 if __name__ == '__main__':
