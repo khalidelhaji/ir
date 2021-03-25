@@ -5,6 +5,7 @@ __pycache__/
 
 wiki-news-300d-1M-subword.bin
 wiki-news-300d-1M.vec
+crawl-300d-2M.vec
 
 
 # Data
@@ -18,6 +19,7 @@ ranklib-features/
 collections/
 runs/
 indexes/
+embeddings/
 
 # Binaries
 RankLib.jar

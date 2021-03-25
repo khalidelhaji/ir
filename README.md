@@ -12,9 +12,7 @@ Clone with `--recurse-submodules` to get the required tools folder which is used
 ### Install dependencies
 First, run `pip install -r requirements.txt` then afterwards run the following commands:
 
-`pip install --user -U nlt`
-
-`python python3 -m nltk.downloader all`
+`python -m nltk.downloader all`
 
 ### Data
 Download from https://microsoft.github.io/msmarco/TREC-Deep-Learning-2019#passage-ranking-dataset
