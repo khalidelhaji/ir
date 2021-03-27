@@ -1,7 +1,6 @@
-import math
 import random
 from pyserini.index import IndexReader
-from l2r_utils import compute_features, read_topics
+from l2r_utils import compute_features, read_topics, format_qrel_line
 
 
 def get_negative_docid(document_count, docid):
@@ -9,10 +8,6 @@ def get_negative_docid(document_count, docid):
     while negative_docid == int(docid):
         negative_docid = random.randint(1, document_count)
     return negative_docid
-
-
-def format_qrel_line(target, qid, features, docid):
-    return f"{target} qid:{qid} 1:{features.bm25_score} 2:{features.tf_idf_sum} 3:{features.total_terms} 4:{features.jm} 5:{features.dirich} #{docid}\n"
 
 
 def main(queries_file, qrels_file, output_file, write_negative):
@@ -43,5 +38,4 @@ def main(queries_file, qrels_file, output_file, write_negative):
 if __name__ == '__main__':
     # Uncommented by default to avoid running a long command (~20 minutes or so)
     # main('queries.train.tsv', 'qrels.train.tsv', 'ranklib-features/data_ranklib-train.txt', True)
-    main('msmarco-test2019-queries.tsv', 'runs/run.msmarco-test2019-queries-bm25.trec',
-         'ranklib-features/data_ranklib-test.txt', False)
+    main('msmarco-test2019-queries.tsv', 'runs/run.msmarco-test2019-queries-bm25.trec', 'ranklib-features/data_ranklib-test.txt', False)

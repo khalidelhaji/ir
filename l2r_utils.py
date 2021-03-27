@@ -23,6 +23,10 @@ def read_topics(file_name):
     return topics
 
 
+def format_qrel_line(target, qid, features, docid):
+    return f"{target} qid:{qid} 1:{features.bm25_score} 2:{features.tf_idf_sum} 3:{features.total_terms} 4:{features.jm} 5:{features.dirich} #{docid}\n"
+
+
 def compute_features(index_reader, query, docid):
     # BM25 score
     bm25_score = index_reader.compute_query_document_score(docid, query)
