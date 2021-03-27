@@ -25,7 +25,7 @@ def run_all_queries(output_file_name, topics, searcher):
             query = topics[id]['title']
             hits = searcher.search(query, 1000)
             for i in range(0, len(hits)):
-                _ = output_file_handle.write('{} Q0 {} {} {:.6f} Anserini\n'.format(id, hits[i].docid, i+1, hits[i].score))
+                _ = output_file_handle.write('{}\tQ0\t{}\t{}\t{:.6f}\tAnserini\n'.format(id, hits[i].docid, i+1, hits[i].score))
             cnt += 1
             if cnt % 100 == 0:
                 print(f'{cnt} queries completed')
