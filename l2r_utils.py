@@ -5,6 +5,29 @@ LAMBDA = 0.5  # LMIR.JM hyperparameter
 MU = 2000  # LMIR.DIR hyperparameter
 
 
+def load_fasttext_line(line):
+    tokens = list(filter(None, line.rstrip().split(' ')))
+    return tokens[0], list(map(float, tokens[1:]))
+
+
+def load_fasttext_vectors(file_name, stop_early=True):
+    fin = open(file_name, 'r', encoding='utf-8', newline='\n', errors='ignore')
+    n, d = map(int, fin.readline().split())
+    data = {}
+    i = 0
+
+    for line in fin:
+        key, values = load_fasttext_line(line)
+        data[key] = values
+        if i % 10000 == 0:
+            print(i)
+        if stop_early and i == 300000:  # 300k
+            break
+        i += 1
+
+    return data
+
+
 def read_topics(file_name):
     file = open(file_name)
 
@@ -24,7 +47,13 @@ def read_topics(file_name):
 
 
 def format_qrel_line(target, qid, features, docid):
-    return f"{target} qid:{qid} 1:{features.bm25_score} 2:{features.tf_idf_sum} 3:{features.total_terms} 4:{features.jm} 5:{features.dirich} #{docid}\n"
+    result = f'{target} qid:{qid} '
+    values = list(features.values())
+
+    for i in range(0, len(values)):
+        result += f'{i + 1}:{values[i]} '
+
+    return result + f'#{docid}\n'
 
 
 def compute_features(index_reader, query, docid):
