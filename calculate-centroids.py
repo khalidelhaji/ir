@@ -1,8 +1,9 @@
 import sys
-
-from nltk.tokenize import word_tokenize
+import os
 import string
+import time
 import numpy as np
+from nltk.tokenize import word_tokenize
 from l2r_utils import load_fasttext_vectors
 
 
@@ -15,7 +16,7 @@ def load_text(fname):
         tokens = line.strip().split('\t')
         data[tokens[0]] = tokens[1]
 
-        if i % 10000 == 0:
+        if i % 100000 == 0:
             print(i)
         i += 1
 
@@ -51,25 +52,36 @@ def compute_mean(vectors, text):
     return np.array2string(mean, max_line_width=sys.maxsize, separator=' ', precision=4, floatmode='fixed', suppress_small=True).strip('[]')
 
 
-def process_file(vectors, qrels_file, queries_file, docs_file, query_output_file, doc_output_file):
-    qrels = open(qrels_file, 'r')
-    count = 0
+def process_file(is_training):
+    embeddings_file = 'embeddings/glove.6B.300d'
+    docs_file = 'collection.tsv'
+    if is_training:
+        qrels_file = 'qrels.train.tsv'
+        queries_file = 'queries.train.tsv'
+        query_output_file = f'{embeddings_file}/queries-embeddings.train.tsv'
+        doc_output_file = f'{embeddings_file}/documents-embeddings.train.tsv'
+    else:
+        qrels_file = 'runs/run.msmarco-test2019-queries-bm25.trec'
+        queries_file = 'msmarco-test2019-queries.tsv'
+        query_output_file = f'{embeddings_file}/queries-embeddings.test.tsv'
+        doc_output_file = f'{embeddings_file}/documents-embeddings.test.tsv'
 
+    print('Loading vectors')
+    vectors = load_fasttext_vectors(f'{embeddings_file}.vec')
     print('Loading queries')
     queries = load_text(queries_file)
     print('Loading documents')
     documents = load_text(docs_file)
 
+    qrels = open(qrels_file, 'r')
+    count = 0
     processed_query_ids = []
     processed_doc_ids = []
 
     print('Calculating centroids')
+    os.system(f'mkdir -p {embeddings_file}')
     with open(query_output_file, 'w') as query_output_handle:
         with open(doc_output_file, 'w') as doc_output_handle:
-            # Write file info according to fastText
-            query_output_handle.write('0 300\n')
-            doc_output_handle.write('0 300\n')
-
             for qrel in qrels:
                 qrel = qrel.strip().split('\t')
                 qid = qrel[0]
@@ -92,14 +104,10 @@ def process_file(vectors, qrels_file, queries_file, docs_file, query_output_file
                 count += 1
 
 
-def main():
-    print('Loading vectors')
-    vectors = load_fasttext_vectors('crawl-300d-2M.vec')
-    # print('Calculating training set')
-    # process_file(vectors, 'qrels.train.tsv', 'queries.train.tsv', 'collection.tsv', 'embeddings/queries-embeddings.train.tsv', 'embeddings/documents-embeddings.train.tsv')
-    # print('Calculating test set')
-    # process_file(vectors, 'runs/run.msmarco-test2019-queries-bm25.trec', 'msmarco-test2019-queries.tsv', 'collection.tsv', 'embeddings/queries-embeddings.test.tsv', 'embeddings/documents-embeddings.test.tsv')
-
-
 if __name__ == '__main__':
-    main()
+    start_time = round(time.time())
+    print(f'Starting at: {start_time}')
+    process_file(False)
+    end_time = round(time.time())
+    print(f'Done at: {end_time}')
+    print(f'Duration: {end_time - start_time}')

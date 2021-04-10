@@ -1,4 +1,5 @@
 import math
+import re
 
 TOTAL_DOCS = 8841823
 LAMBDA = 0.5  # LMIR.JM hyperparameter
@@ -12,11 +13,14 @@ def load_fasttext_line(line):
 
 def load_fasttext_vectors(file_name, stop_early=True):
     fin = open(file_name, 'r', encoding='utf-8', newline='\n', errors='ignore')
-    n, d = map(int, fin.readline().split())
+    # n, d = map(int, fin.readline().split()) # We manually removed the first line
     data = {}
     i = 0
 
     for line in fin:
+        # Skip Twitter specific words/tokens
+        if re.search("^<[^>]+> ", line):
+            continue
         key, values = load_fasttext_line(line)
         data[key] = values
         if i % 10000 == 0:
@@ -90,6 +94,7 @@ def compute_features(index_reader, query, docid):
     return {
         'bm25_score': "{:.8f}".format(bm25_score),
         'tf_idf_sum': "{:.8f}".format(tf_idf_sum),
+        'total_terms': total_terms,
         'jm': "{:.8f}".format(jm),
         'dirich': "{:.8f}".format(dirich),
     }
