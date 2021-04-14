@@ -54,6 +54,8 @@ def compute_mean(vectors, text):
 
 def process_file(is_training):
     embeddings_file = 'embeddings/glove.6B.300d'
+    print(f'Processing {embeddings_file}')
+
     docs_file = 'collection.tsv'
     if is_training:
         qrels_file = 'qrels.train.tsv'

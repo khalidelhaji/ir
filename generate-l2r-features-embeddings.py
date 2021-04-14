@@ -21,7 +21,9 @@ def get_negative_docid(available_doc_ids, docid):
 
 
 def main(is_training):
-    embeddings_file = 'glove.6B.300d'
+    embeddings_file = 'glove.840B.300d'
+    print(f'Processing {embeddings_file}')
+
     if is_training:
         qrels_file = 'qrels.train.tsv'
         queries_file = 'queries.train.tsv'
